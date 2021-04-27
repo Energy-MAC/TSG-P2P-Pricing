@@ -8,9 +8,9 @@ Please note that this repository already includes a copy of the repository [Comp
 
 To run the simulations in MATLAB presented in the paper in Section IV, the user should first clone the repository to its local computer. Afterward, run the file `init.m` to properly set-up the path in MATLAB.
 
-### A) Effect of parameters ``\gamma`` and ``\delta_0`` on convergence.
+### A) Effect of parameters γ and δ₀ on convergence.
 
-To run this simulation, open the file `analyzeParameterExperiment.m` and run it. Please note that this will run 100 trials for each of the 380 pairs of ``(\gamma, \delta_0)`` and the simulation will take around 8 hours.
+To run this simulation, open the file `analyzeParameterExperiment.m` and run it. Please note that this will run 100 trials for each of the 380 pairs of (γ, δ₀) and the simulation will take around 8 hours.
 
 ### B) Performance for unproven cases
 
