@@ -6,7 +6,7 @@ Please note that this repository already includes a copy of the repository [Comp
 
 ## Run Simulation Cases
 
-To run the simulations in MATLAB presented in the paper in Section IV, the user should first clone the repository to its local computer. Afterward, run the file `init.m` to properly set-up the path in MATLAB.
+To run the simulations in MATLAB presented in the paper in Section IV, the user should first clone the repository to its local computer. Afterwards, run the file `init.m` to properly set-up the path in MATLAB.
 
 ### A) Effect of parameters γ and δ₀ on convergence.
 
