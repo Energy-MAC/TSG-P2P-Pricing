@@ -1,0 +1,13 @@
+﻿ParameterName,Value
+N_trials,2
+seed,100
+maxN,4
+maxElasticity,-0.5
+minElasticity,-1.5
+maxGamma,0.9
+minGamma,0.1
+maxIterations,1000
+epsilon,0.001
+delta0,0.5
+deltaT,1
+nominalPrice,0.1

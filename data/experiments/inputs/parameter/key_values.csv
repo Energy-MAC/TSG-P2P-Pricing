@@ -1,0 +1,15 @@
+﻿ParameterName,Value
+N_trials,100
+seed,107
+maxElasticity,-0.5
+minElasticity,-1.5
+maxGamma,0.95
+minGamma,0.05
+gammaStepSize,0.05
+minDelta0,0.1
+maxDelta0,2
+delta0StepSize,0.1
+maxIterations,1000
+epsilon,0.001
+maxSolarScaleFactor,2
+nominalPrice,0.1
