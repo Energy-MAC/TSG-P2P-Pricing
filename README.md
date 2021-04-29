@@ -1,6 +1,6 @@
 # Pricing and Energy Trading in Peer-to-peer Zero Marginal-cost Microgrids
 
-This repository provides the models used in the paper: J. T. Lee, R. Henriquez-Auba, B. K. Poolla and D. S. Callaway, "Pricing and Energy Trading in Peer-to-peer Zero Marginal-cost Microgrids", submitted to IEEE Transactions on Smart Grid.
+This repository provides the models used in the paper: J. T. Lee, R. Henriquez-Auba, B. K. Poolla and D. S. Callaway, "Pricing and Energy Trading in Peer-to-peer Zero Marginal-cost Microgrids", submitted to IEEE Transactions on Smart Grid. Pre-print version can be found [here](https://arxiv.org/abs/2103.13530).
 
 Please note that this repository already includes a copy of the repository [Computational Experiments in MATLAB](https://github.com/leejt489/computational-experiment-matlab) to simplify the simulation of the cases presented in the paper.
 
