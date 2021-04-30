@@ -14,7 +14,7 @@ To run this simulation, open the file `analyzeParameterExperiment.m` and run it.
 
 ### B) Performance for unproven cases
 
-To be added soon.
+To run this simulation, open the file `analyzeStorageExperiment.m` and run it. Please note that this will run 60 trials for each of the 20 pairs of the storage parameters, and the simulation will take around 20 hours.
 
 ## Algorithm implementations
 

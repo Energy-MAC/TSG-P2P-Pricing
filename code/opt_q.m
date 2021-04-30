@@ -127,19 +127,34 @@ end
 opts = optimoptions('fmincon','Algorithm','sqp','Display','none',...
     'MaxFunctionEvaluations', 1e8, 'MaxIterations', 1e4);
 % Solve problem
-[x,~,exitFlag] = fmincon(f,x0,[],[],Aeq,beq,lb,ub,[],opts);
+try
+    [x,~,exitFlag] = fmincon(f,x0,[],[],Aeq,beq,lb,ub,[],opts);
+    %disp(exitFlag)
+catch err
+    try
+        opts = optimoptions('fmincon','Algorithm','interior-point','Display','none',...
+            'MaxFunctionEvaluations', 1e8, 'MaxIterations', 1e4); %Try interior method if sqp fails
+        [x,~,exitFlag] = fmincon(f,x0,[],[],Aeq,beq,lb,ub,[],opts);
+        %disp(exitFlag)
+    catch err2
+        disp(err2)
+    end
+    disp(err)
+end
 
 if (exitFlag <= 0)
     % Try again starting with feasible initial point by solving an LP
     % holding q_prev fixed
     x0 = zeros(xDim,1);
     x0(qInd) = q_prev;
-    qIndLogical = false(xDim,1);
-    qIndLogical(qInd) = true;
-    x0(~qIndLogical) = linprog(zeros(sum(~qIndLogical),1),[],[],...
+    qIndLogical = false(xDim,1); % 96x1
+    qIndLogical(qInd) = true; % true between 25:48
+    optionslin = optimoptions('linprog','Algorithm','interior-point', 'MaxIterations', 1e4);
+    [aux, fvalaux, flagaux] = linprog(zeros(sum(~qIndLogical),1),[],[],...
         Aeq(:,~qIndLogical),beq-Aeq(:,qIndLogical)*q_prev,...
-        lb(~qIndLogical),ub(~qIndLogical),...
-        optimset('Display','none'));
+        lb(~qIndLogical),ub(~qIndLogical), optionslin);%,...
+        %optimset('Display','none'));
+    x0(~qIndLogical) = aux;
     
     [x,~,exitFlag] = fmincon(f,x0,[],[],Aeq,beq,lb,ub,[],opts);
     

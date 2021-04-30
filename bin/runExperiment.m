@@ -7,6 +7,8 @@ switch (lower(experimentType))
         constructor = @ConvergenceExperiment;
     case 'parameter'
         constructor = @ParameterExperiment;
+    case 'storage'
+        constructor = @StorageExperiment;
     otherwise
         error('Unsupported experiment type: ''%s''',experimentType);
 end

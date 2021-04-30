@@ -167,23 +167,32 @@ function [price, q, d, p_b, s, lambda_b, lambda_c] = opt_centralized(u,p_s,delta
 
     x0 = zeros(xDim,1);
     try
-        opts = optimoptions('fmincon','Algorithm','interior-point','Display','iter', 'MaxFunctionEvaluations', 1e8,'StepTolerance',1e-20); % sqp to get better accuracy on lagrange multipliers
+        opts = optimoptions('fmincon','Algorithm','interior-point','Display','none', 'MaxFunctionEvaluations', 1e8,'StepTolerance',1e-20); % sqp to get better accuracy on lagrange multipliers
         opts.OptimalityTolerance = 1e-5;
         opts.MaxIterations = 2000;
         if ~isempty(marg_util)
             opts.SpecifyConstraintGradient = true;
             opts.CheckGradients = true;
         end
-        [x,~,exitflag,~,lambda] = fmincon(f,x0,sparse(A),b,sparse(Aeq),beq,lb,ub,nonlcon,opts); %sqp
+        [x,~,exitflag,~,lambda] = fmincon(f,x0,sparse(A),b,sparse(Aeq),beq,lb,ub,nonlcon,opts); %interior-point
 
         if (exitflag <= 0)
-            error('Optimization did not converge. Flag: %g',exitflag);
+            opts = optimoptions('fmincon','Algorithm','sqp','Display','none', 'MaxFunctionEvaluations', 1e10, 'MaxIterations', 1e4); % Try sqp if interior-point doesn't work
+            [x,~,exitflag,~,lambda] = fmincon(f,x0,sparse(A),b,sparse(Aeq),beq,lb,ub,nonlcon,opts);
+    
+            if (exitflag <= 0)
+                opts = optimoptions('fmincon','Algorithm','interior-point','Display','none', 'MaxFunctionEvaluations', 1e10, 'MaxIterations', 1e4); % Try relaxed interior point if sqp doesn't work
+                [x,~,exitflag,~,lambda] = fmincon(f,x0,sparse(A),b,sparse(Aeq),beq,lb,ub,nonlcon,opts);
+                if (exitflag <= 0)
+                    error('Optimization did not converge. Flag: %g',exitflag);
+                end
+            end
         end
         if (exitflag > 1)
             warning('Optimization may not have converged to optimal point. Flag: %g', exitflag);
         end
     catch err
-        error(err);
+        disp(err);
     end
 
     d = reshape(x(dInd),T,N);
@@ -203,11 +212,21 @@ function [price, q, d, p_b, s, lambda_b, lambda_c] = opt_centralized(u,p_s,delta
     price = abs(lambda.eqlin(1:T));
     lambda_b = reshape(lambda.upper(p_bInd) - lambda.lower(p_bInd),T,N);
     if sub_s
-        lambda_c = lambda.ineqlin(lambda_c_upper_ind) - lambda.ineqlin(lambda_c_lower_ind);
+        if exitflag <= 0
+            lambda_c = NaN;
+        else
+            lambda_c = lambda.ineqlin(lambda_c_upper_ind) - lambda.ineqlin(lambda_c_lower_ind);
+        end
     else
-        lambda_c = lambda.upper(sInd) - lambda.lower(sInd);
+        if exitflag <= 0
+            lambda_c = NaN;
+        else
+            lambda_c = lambda.upper(sInd) - lambda.lower(sInd);
+        end
     end
-    lambda_c = reshape(lambda_c,T,N);
+    if exitflag > 0
+        lambda_c = reshape(lambda_c,T,N);
+    end
 
 end
 

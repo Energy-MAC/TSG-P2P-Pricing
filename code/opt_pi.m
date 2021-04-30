@@ -123,7 +123,18 @@ end
 opts = optimoptions('fmincon','Algorithm','sqp','Display','none',...
     'MaxFunctionEvaluations', 1e8, 'MaxIterations', 1e4);  % sqp to get better accuracy on lagrange multipliers
 opts.StepTolerance = opts.ConstraintTolerance/100; % prevent early termination
-[x,fval,exitflag,~,lambda] = fmincon(f,x0,[],[],Aeq,beq,lb,ub,nonlcon,opts);
+try
+    [x,fval,exitflag,~,lambda] = fmincon(f,x0,[],[],Aeq,beq,lb,ub,nonlcon,opts);
+catch err
+    try
+        opts = optimoptions('fmincon','Algorithm','interior-point','Display','none',...
+            'MaxFunctionEvaluations', 1e8, 'MaxIterations', 1e4); % Try interior point method if sqp fails
+        [x,fval,exitflag,~,lambda] = fmincon(f,x0,[],[],Aeq,beq,lb,ub,nonlcon,opts);
+    catch err2
+        disp(err2)
+    end
+    disp(err)
+end
 
 if (exitflag <= 0)
     error('Optimization did not converge. Flag: %g',exitflag);
